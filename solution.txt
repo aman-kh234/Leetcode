@@ -1,39 +1,42 @@
-class Solution {
-public:
-    double separateSquares(vector<vector<int>>& squares) {
-       
-        auto area_above = [&](double y_mid) {
-           
-        double total = 0;
-        for (auto& square : squares) {
-            long long x = square[0], y = square[1], l = square[2];
-            long long top = y + l;
-           
-            if (y_mid >= top) continue;  // Entire square is below
-            if (y_mid <= y) total += (double)l * l;  // Entire square is above
-            else total += (top - y_mid) * l;  // Partial area above
-        }
-        return total;
-    };
-   
-    double y_low = squares[0][1], y_high = squares[0][1] + squares[0][2];
+int n = s.size(), m = p.size();
+    int f = -1, sec = -1;
 
-    double total_area = 0;
-    for (auto& square : squares) {
-        y_low = min(y_low, (double)square[1]);
-        y_high = max(y_high, (double)(square[1] + square[2]));
-        total_area += (double)square[2] * square[2];
+    for (int i = 0; i < m; i++) {
+        if (p[i] == '*') {
+            if (f == -1) f = i;
+            else { sec = i; break; }
+        }
     }
-    double half_area = total_area / 2;
-    
-    // Binary search for y_mid
-    double eps = 1e-5;
-    while (y_high - y_low > eps) {
-        double y_mid = (y_low + y_high) / 2.0;
-        if (area_above(y_mid) > half_area) y_low = y_mid;
-        else y_high = y_mid;
+
+    if (f == -1 || sec == -1) return -1;
+
+    string pre = p.substr(0, f);
+    string mid = p.substr(f + 1, sec - f - 1);
+    string suf = p.substr(sec + 1);
+
+    int preL = pre.size(), midL = mid.size(), sufL = suf.size();
+    vector<int> prePos, midPos, sufPos;
+
+    for (int i = 0; i + preL <= n; i++)
+        if (s.compare(i, preL, pre) == 0) prePos.push_back(i);
+
+    for (int i = 0; i + midL <= n; i++)
+        if (s.compare(i, midL, mid) == 0) midPos.push_back(i);
+ for (int i = 0; i + sufL <= n; i++)
+        if (s.compare(i, sufL, suf) == 0) sufPos.push_back(i);
+
+    int minLen = INT_MAX;
+
+    for (int st : prePos) {
+        auto midIt = lower_bound(midPos.begin(), midPos.end(), st + preL);
+        if (midIt == midPos.end()) break;
+        int midSt = *midIt;
+
+        auto sufIt = lower_bound(sufPos.begin(), sufPos.end(), midSt + midL);
+        if (sufIt == sufPos.end()) break;
+        int sufSt = *sufIt;
+
+        minLen = min(minLen, sufSt + sufL - st);
     }
-   
-    return round(y_low * 100000) / 100000;
-}
-};©leetcode
+
+    return minLen == INT_MAX ? -1 : minLen;
