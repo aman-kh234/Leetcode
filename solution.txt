@@ -1,16 +1,8 @@
-const Sidebar = () => {
-  return (
-    <div className="min-h-[85vh] flex flex-col justify-center fixed w-[20vw]">
-      <div className="space-y-5 h-full">
-        <div className="flex justify-center">
-          <Avatar
-            sx={{ width: "8rem", height: "8rem" }}
-            src="https://res.cloudinary.com/dxoqwusir/image/upload/v1703852575/Code_With_Zosh_e0bbz7.png"
-          />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Sidebar;
+const menu = [
+  { name: "Home", value: "HOME", role: ["ROLE_ADMIN", "ROLE_CUSTOMER"] },
+  { name: "DONE", value: "DONE", role: ["ROLE_ADMIN", "ROLE_CUSTOMER"] },
+  { name: "ASSIGNED", value: "ASSIGNED", role: ["ROLE_ADMIN"] },
+  { name: "NOT ASSIGNED", value: "PENDING", role: ["ROLE_ADMIN"] },
+  { name: "Create New Task", value: "", role: ["ROLE_ADMIN"] },
+  { name: "Notification", value: "NOTIFICATION", role: ["ROLE_CUSTOMER"] },
+];
